@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+
+Name: hyni
+Description: Dynamic schema-based context management for chat APIs
+Version: 1.0
+Libs: -L${libdir} -lhyni
+Cflags: -I${includedir}/hyni
+Requires: libcurl

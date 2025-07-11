@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hyni Chat UI
+Comment=Chat interface for various AI providers
+Exec=hyni-ui-launcher
+Terminal=false
+StartupNotify=true
+Categories=Network;Chat;Development;Qt;
+Keywords=chat;ai;openai;claude;api;assistant;
+StartupWMClass=hyni-ui

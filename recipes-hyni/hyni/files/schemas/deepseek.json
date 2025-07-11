@@ -1,0 +1,217 @@
+{
+  "provider": {
+    "name": "deepseek",
+    "display_name": "DeepSeek Chat",
+    "version": "1.0",
+    "api_version": "v1",
+    "last_validated": "2025-06-26",
+    "schema_version": "1.0.2"
+  },
+  "api": {
+    "endpoint": "https://api.deepseek.com/v1/chat/completions",
+    "method": "POST",
+    "timeout": 60000,
+    "max_retries": 3
+  },
+  "authentication": {
+    "type": "header",
+    "key_name": "Authorization",
+    "key_prefix": "Bearer ",
+    "key_placeholder": "<YOUR_DEEPSEEK_API_KEY>"
+  },
+  "headers": {
+    "required": {
+      "Authorization": "Bearer <YOUR_DEEPSEEK_API_KEY>",
+      "Content-Type": "application/json"
+    },
+    "optional": {
+      "Accept": "application/json"
+    }
+  },
+  "models": {
+    "available": [
+      "deepseek-chat",
+      "deepseek-coder"
+    ],
+    "deprecated": [
+      "deepseek-math",
+      "deepseek-v2",
+      "deepseek-v2-light"
+    ],
+    "default": "deepseek-chat",
+    "description": "Deprecated models may still work but are not recommended for new projects."
+  },
+  "request_template": {
+    "model": "deepseek-chat",
+    "messages": [],
+    "temperature": 0.7,
+    "top_p": 1.0,
+    "max_tokens": 2048,
+    "stream": false,
+    "frequency_penalty": 0,
+    "presence_penalty": 0,
+    "stop": null
+  },
+  "parameters": {
+    "max_tokens": {
+      "type": "integer",
+      "required": false,
+      "min": 1,
+      "max": 4096,
+      "default": 2048
+    },
+    "temperature": {
+      "type": "float",
+      "required": false,
+      "min": 0.0,
+      "max": 2.0,
+      "default": 0.7
+    },
+    "top_p": {
+      "type": "float",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0
+    },
+    "frequency_penalty": {
+      "type": "float",
+      "required": false,
+      "min": 0.0,
+      "max": 2.0,
+      "default": 0.0
+    },
+    "presence_penalty": {
+      "type": "float",
+      "required": false,
+      "min": 0.0,
+      "max": 2.0,
+      "default": 0.0
+    },
+    "stop": {
+      "type": ["string", "array"],
+      "items": {
+        "type": "string",
+        "maxLength": 128
+      },
+      "maxItems": 4,
+      "required": false,
+      "default": null,
+      "description": "Up to 4 sequences where the API will stop generating further tokens."
+    },
+    "stream": {
+      "type": "boolean",
+      "required": false,
+      "default": false
+    }
+  },
+  "message_roles": ["user", "assistant", "system"],
+  "system_message": {
+    "supported": true,
+    "field": "messages",
+    "type": "string",
+    "role": "system"
+  },
+  "multimodal": {
+    "supported": false,
+    "supported_types": ["text"],
+    "image_formats": [],
+    "max_image_size": 0,
+    "max_images_per_message": 0
+  },
+  "message_format": {
+    "structure": {
+      "role": "<ROLE>",
+      "content": "<TEXT_CONTENT>"
+    },
+    "system_structure": {
+      "role": "system",
+      "content": "<TEXT>"
+    },
+    "content_types": {
+      "text": {
+        "type": "text",
+        "text": "<TEXT_CONTENT>"
+      }
+    }
+  },
+  "response_format": {
+    "success": {
+      "structure": {
+        "id": "string",
+        "object": "chat.completion",
+        "created": "integer",
+        "model": "string",
+        "choices": [
+          {
+            "index": "integer",
+            "message": {
+              "role": "assistant",
+              "content": "string"
+            },
+            "finish_reason": "string"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": "integer",
+          "completion_tokens": "integer",
+          "total_tokens": "integer"
+        }
+      },
+      "content_path": ["choices", 0, "message", "content"],
+      "text_path": ["choices", 0, "message", "content"],
+      "usage_path": ["usage"],
+      "model_path": ["model"],
+      "stop_reason_path": ["choices", 0, "finish_reason"]
+    },
+    "error": {
+      "structure": {
+        "error": {
+          "message": "string",
+          "type": "string",
+          "code": "string"
+        }
+      },
+      "error_path": ["error", "message"],
+      "error_type_path": ["error", "type"],
+      "error_code_path": ["error", "code"]
+    },
+    "stream": {
+      "event_types": ["message_start", "content_block_start", "ping", "content_block_delta", "content_block_stop", "message_delta", "message_stop"],
+      "content_delta_path": ["choices", 0, "delta", "content"],
+      "usage_delta_path": ["usage"]
+    }
+  },
+  "limits": {
+    "max_context_length": 128000,
+    "max_output_tokens": 4096,
+    "rate_limits": {
+      "requests_per_minute": 60,
+      "tokens_per_minute": 100000
+    }
+  },
+  "features": {
+    "streaming": true,
+    "function_calling": false,
+    "json_mode": false,
+    "vision": false,
+    "system_messages": true,
+    "message_history": true
+  },
+  "error_codes": {
+    "400": "invalid_request_error",
+    "401": "authentication_error",
+    "403": "permission_error",
+    "404": "not_found_error",
+    "429": "rate_limit_error",
+    "500": "api_error"
+  },
+  "validation": {
+    "required_fields": ["model", "messages"],
+    "message_validation": {
+      "min_messages": 1,
+      "alternating_roles": true,
+      "last_message_role": "user"
+    }
+  }
+}
